@@ -6,7 +6,6 @@ import { Card } from "@/components/ui/card";
 import { Mic, MicOff, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import LanguageSettings from "@/components/language-settings";
-import ThemeToggle from "./theme-toggle";
 
 interface Transcript {
   id: string;
@@ -144,17 +143,14 @@ export default function LiveTranscription() {
           <h1 className='text-xl font-semibold text-foreground'>
             pwatranscribe
           </h1>
-          <div className='flex flex-row items-center gap-3'>
-            <Button
-              variant='ghost'
-              size='icon'
-              onClick={() => setShowSettings(!showSettings)}
-              className='text-muted-foreground'
-            >
-              <Settings className='size-5' />
-            </Button>
-            <ThemeToggle />
-          </div>
+          <Button
+            variant='ghost'
+            size='icon'
+            onClick={() => setShowSettings(!showSettings)}
+            className='text-muted-foreground'
+          >
+            <Settings className='size-5' />
+          </Button>
         </div>
       </header>
 

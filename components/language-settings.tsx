@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
-interface SettingsProps {
+interface LanguageSettingsProps {
   selectedLanguages: string[];
   onLanguagesChange: (languages: string[]) => void;
   onClose: () => void;
@@ -25,7 +25,7 @@ export default function LanguageSettings({
   selectedLanguages,
   onLanguagesChange,
   onClose,
-}: SettingsProps) {
+}: LanguageSettingsProps) {
   const toggleLanguage = (code: string) => {
     if (selectedLanguages.includes(code)) {
       // Keep at least one language selected
@@ -84,7 +84,7 @@ export default function LanguageSettings({
 
           <p className='mt-4 text-xs text-muted-foreground'>
             Note: The browser will use the primary language for recognition.
-            Mixed language speech may be transcribed in the primary languages
+            Mixed language speech may be transcribed in the primary language
             script.
           </p>
         </div>

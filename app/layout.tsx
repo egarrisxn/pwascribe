@@ -1,8 +1,6 @@
-import type { ReactNode } from "react";
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { ThemeProvider } from "@/providers/theme";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,7 +17,6 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://pwascribe.vercel.app"),
   title: "pwascribe",
   description: "pwa transcription app.",
-  referrer: "origin-when-cross-origin",
   keywords: [
     "pwascribe, pwa, transcribe, transcription, speech-to-text, transcription, nextjs, react, typescript, javascript, api, voice, audio",
   ],
@@ -40,36 +37,20 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport: Viewport = {
-  initialScale: 1,
-  width: "device-width",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
-  ],
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: ReactNode;
+  children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang='en'>
       <head>
         <meta name='apple-mobile-web-app-title' content='pwascribe' />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='system'
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        {children}
         <Analytics />
       </body>
     </html>
