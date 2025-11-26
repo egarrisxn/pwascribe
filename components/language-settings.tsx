@@ -12,7 +12,6 @@ interface LanguageSettingsProps {
 
 const AVAILABLE_LANGUAGES = [
   { code: "en-US", name: "English (US)", flag: "🇺🇸" },
-  { code: "en-GB", name: "English (UK)", flag: "🇬🇧" },
   { code: "hi-IN", name: "हिन्दी (Hindi)", flag: "🇮🇳" },
   { code: "es-ES", name: "Español", flag: "🇪🇸" },
   { code: "fr-FR", name: "Français", flag: "🇫🇷" },
@@ -50,7 +49,7 @@ export default function LanguageSettings({
         </div>
 
         <div className='space-y-2'>
-          <p className='mb-3 text-sm text-muted-foreground'>
+          <p className='mb-3 text-muted-foreground'>
             Primary language for recognition (first selected):
           </p>
 
@@ -82,7 +81,7 @@ export default function LanguageSettings({
             ))}
           </div>
 
-          <p className='mt-4 text-xs text-muted-foreground'>
+          <p className='mt-4 text-muted-foreground'>
             Note: The browser will use the primary language for recognition.
             Mixed language speech may be transcribed in the primary language
             script.
