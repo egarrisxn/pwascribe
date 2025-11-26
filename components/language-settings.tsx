@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { XCloseIcon } from "@/components/icons";
 
 interface LanguageSettingsProps {
   selectedLanguages: string[];
@@ -44,7 +44,7 @@ export default function LanguageSettings({
             Language Settings
           </h2>
           <Button variant='ghost' size='icon' onClick={onClose}>
-            <X className='size-5' />
+            <XCloseIcon className='size-5' />
           </Button>
         </div>
 

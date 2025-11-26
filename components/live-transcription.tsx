@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import LanguageSettings from "@/components/language-settings";
-import ThemeSwitcher from "@/components/theme";
+import ThemeToggle from "@/components/theme-toggle";
 import { MicIcon, MicOffIcon, SettingsIcon } from "@/components/icons";
 
 interface Transcript {
@@ -144,7 +144,7 @@ export default function LiveTranscription() {
         <div className='container mx-auto flex items-center justify-between p-4'>
           <Image src='/pwa.png' alt='pwa logo' width={40} height={40} />
           <div className='flex flex-row items-center gap-1'>
-            <ThemeSwitcher />
+            <ThemeToggle />
             <button
               onClick={() => setShowSettings(!showSettings)}
               className='inline-flex cursor-pointer rounded-lg border-none bg-transparent p-2 leading-none text-gray-500 transition-all duration-200 ease-in-out select-none hover:bg-gray-100 hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white'
