@@ -37,12 +37,21 @@ export default function LiveTranscription() {
         (window as any).SpeechRecognition ||
         (window as any).webkitSpeechRecognition;
 
+      // 🔹 UPDATED BLOCK: iOS-aware error message
       if (!SpeechRecognition) {
+        const isIOS =
+          /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+          (navigator.platform === "MacIntel" &&
+            (navigator as any).maxTouchPoints > 1);
+
         setError(
-          "Speech recognition is not supported in this browser. Please use Chrome or Edge."
+          isIOS
+            ? "Speech recognition isn't available in iOS browsers yet. Try this app on a desktop browser (Chrome or Edge) for live transcription."
+            : "Speech recognition is not supported in this browser. Please try Chrome or Edge on desktop."
         );
         return;
       }
+      // 🔹 END UPDATED BLOCK
 
       const recognition = new SpeechRecognition();
       recognition.continuous = true;
