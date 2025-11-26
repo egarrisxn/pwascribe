@@ -29,94 +29,113 @@ export default function LiveTranscription() {
 
   const recognitionRef = useRef<any>(null);
   const transcriptContainerRef = useRef<HTMLDivElement>(null);
+  const isListeningRef = useRef(false); // tracks desired listening state
 
+  // Keep ref in sync with state
   useEffect(() => {
-    // Check if browser supports Web Speech API
-    if (typeof window !== "undefined") {
-      const SpeechRecognition =
-        (window as any).SpeechRecognition ||
-        (window as any).webkitSpeechRecognition;
+    isListeningRef.current = isListening;
+  }, [isListening]);
 
-      // 🔹 UPDATED BLOCK: iOS-aware error message
-      if (!SpeechRecognition) {
-        const isIOS =
-          /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-          (navigator.platform === "MacIntel" &&
-            (navigator as any).maxTouchPoints > 1);
+  // Initialize SpeechRecognition once on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
-        setError(
-          isIOS
-            ? "Speech recognition isn't available in iOS browsers yet. Try this app on a desktop browser (Chrome or Edge) for live transcription."
-            : "Speech recognition is not supported in this browser. Please try Chrome or Edge on desktop."
-        );
-        return;
-      }
-      // 🔹 END UPDATED BLOCK
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
 
-      const recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
+    if (!SpeechRecognition) {
+      const isIOS =
+        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" &&
+          (navigator as any).maxTouchPoints > 1);
 
-      // Set primary language (we'll use English as base, but it can detect Hindi words)
-      recognition.lang = selectedLanguages[0] || "en-US";
-
-      recognition.onresult = (event: any) => {
-        let interimTranscript = "";
-        let finalTranscript = "";
-
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript + " ";
-          } else {
-            interimTranscript += transcript;
-          }
-        }
-
-        if (finalTranscript) {
-          const newTranscript: Transcript = {
-            id: Date.now().toString(),
-            text: finalTranscript.trim(),
-            timestamp: Date.now(),
-            isFinal: true,
-          };
-          setTranscripts((prev) => [...prev, newTranscript]);
-          setCurrentTranscript("");
-        } else {
-          setCurrentTranscript(interimTranscript);
-        }
-      };
-
-      recognition.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error);
-        if (event.error === "no-speech") {
-          // Don't show error for no-speech, just continue listening
-          return;
-        }
-        setError(`Error: ${event.error}`);
-        setIsListening(false);
-      };
-
-      recognition.onend = () => {
-        if (isListening) {
-          // Restart recognition if it stops but we're still supposed to be listening
-          recognition.start();
-        }
-      };
-
-      recognitionRef.current = recognition;
+      setError(
+        isIOS
+          ? "Speech recognition isn't available in iOS browsers yet. Try this app on a desktop browser (Chrome or Edge) for live transcription."
+          : "Speech recognition is not supported in this browser. Please try Chrome or Edge on desktop."
+      );
+      return;
     }
 
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US"; // default (we update when languages change)
+
+    recognition.onresult = (event: any) => {
+      let interimTranscript = "";
+      let finalTranscript = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + " ";
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+
+      if (finalTranscript) {
+        const newTranscript: Transcript = {
+          id: Date.now().toString(),
+          text: finalTranscript.trim(),
+          timestamp: Date.now(),
+          isFinal: true,
+        };
+        setTranscripts((prev) => [...prev, newTranscript]);
+        setCurrentTranscript("");
+      } else {
+        setCurrentTranscript(interimTranscript);
       }
     };
-  }, [isListening, selectedLanguages]);
 
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error:", event.error);
+
+      // Ignore benign / expected errors
+      if (event.error === "no-speech" || event.error === "aborted") {
+        return;
+      }
+
+      setError(`Error: ${event.error}`);
+      setIsListening(false);
+      isListeningRef.current = false;
+    };
+
+    recognition.onend = () => {
+      // Auto-restart if we *want* to be listening
+      if (isListeningRef.current) {
+        try {
+          recognition.start();
+        } catch (e) {
+          console.error("Error restarting recognition:", e);
+        }
+      }
+    };
+
+    recognitionRef.current = recognition;
+
+    return () => {
+      try {
+        recognition.stop();
+      } catch {
+        // ignore
+      }
+      recognitionRef.current = null;
+    };
+  }, []);
+
+  // Update language when selection changes
   useEffect(() => {
-    // Auto-scroll to bottom when new transcripts arrive
+    if (recognitionRef.current) {
+      recognitionRef.current.lang = selectedLanguages[0] || "en-US";
+    }
+  }, [selectedLanguages]);
+
+  // Auto-scroll transcripts
+  useEffect(() => {
     if (transcriptContainerRef.current) {
       transcriptContainerRef.current.scrollTop =
         transcriptContainerRef.current.scrollHeight;
@@ -130,18 +149,35 @@ export default function LiveTranscription() {
     }
 
     if (isListening) {
-      recognitionRef.current.stop();
+      // STOP LISTENING, but keep existing text
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        console.error("Error stopping recognition:", e);
+      }
+      isListeningRef.current = false;
       setIsListening(false);
     } else {
+      // START LISTENING; do NOT clear history here
       setError(null);
-      setTranscripts([]);
+      // optional: clear only the interim line so it doesn't look stale
       setCurrentTranscript("");
-      recognitionRef.current.start();
-      setIsListening(true);
+
+      try {
+        recognitionRef.current.start();
+        isListeningRef.current = true;
+        setIsListening(true);
+      } catch (e) {
+        console.error("Error starting recognition:", e);
+        setError("Unable to start speech recognition. Please try again.");
+        isListeningRef.current = false;
+        setIsListening(false);
+      }
     }
   };
 
   const clearTranscripts = () => {
+    // Only this actually wipes the text
     setTranscripts([]);
     setCurrentTranscript("");
   };
