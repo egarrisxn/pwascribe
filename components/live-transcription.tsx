@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Mic, MicOff, Settings } from "lucide-react";
@@ -140,9 +141,7 @@ export default function LiveTranscription() {
       {/* Header */}
       <header className='border-b border-border bg-card'>
         <div className='container mx-auto flex items-center justify-between p-4'>
-          <h1 className='text-xl font-semibold text-foreground'>
-            pwatranscribe
-          </h1>
+          <Image src='/pwa.png' alt='pwa logo' width={40} height={40} />
           <Button
             variant='ghost'
             size='icon'
@@ -229,7 +228,7 @@ export default function LiveTranscription() {
               className={cn(
                 "h-16 w-full text-lg font-medium transition-all",
                 isListening
-                  ? "text-destructive-foreground bg-destructive hover:bg-destructive/90"
+                  ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   : "bg-accent text-accent-foreground hover:bg-accent/90"
               )}
             >

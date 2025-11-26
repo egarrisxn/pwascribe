@@ -15,23 +15,23 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pwascribe.vercel.app"),
-  title: "pwascribe",
-  description: "pwa transcription app.",
+  title: "pwaScribe",
+  description: "Realtime Voice-2-Text",
   keywords: [
     "pwascribe, pwa, transcribe, transcription, speech-to-text, transcription, nextjs, react, typescript, javascript, api, voice, audio",
   ],
   openGraph: {
     locale: "en_US",
     type: "website",
-    title: "pwascribe",
-    description: "pwa transcription app.",
+    title: "pwaScribe",
+    description: "Realtime Voice-2-Text",
     url: "https://pwascribe.vercel.app",
     siteName: "pwascribe",
   },
   twitter: {
     card: "summary_large_image",
-    title: "pwascribe",
-    description: "pwa transcription app.",
+    title: "pwaScribe",
+    description: "Realtime Voice-2-Text",
     creator: "@eg__xo",
     site: "@eg__xo",
   },
@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <head>
-        <meta name='apple-mobile-web-app-title' content='pwascribe' />
+        <meta name='apple-mobile-web-app-title' content='pwaScribe' />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
