@@ -1,12 +1,12 @@
-# PWASCRIBE
+# pwaScribe
+
+<img width="1200" height="630" alt="pwa" src="https://github.com/user-attachments/assets/60990250-3599-4331-8586-4ed724c92806" />
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![GitHub repo size](https://img.shields.io/github/repo-size/egarrisxn/pwascribe) ![GitHub last commit](https://img.shields.io/github/last-commit/egarrisxn/pwascribe)
 
-<img width="1200" height="630" alt="pwascribe" src="https://github.com/user-attachments/assets/8d654b9d-7196-4d06-9c13-9c990fdef03f" />
-
 ## Overview
 
-pwaScribe is a speech-2-text app.
+Realtime Voice-2-Text.
 
 ## Technologies
 
